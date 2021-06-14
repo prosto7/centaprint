@@ -236,7 +236,6 @@ static function changeNews() {
             }
 
 
-
             static function getLastNews () {
                 try {
                     $pdo = Tools::connect();

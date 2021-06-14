@@ -21,4 +21,4 @@ $categories = 'CREATE TABLE categories(
     
 // $pdo->exec($user);
 //  $pdo->exec($news);
-$pdo->exec($categories);
+// $pdo->exec($categories);

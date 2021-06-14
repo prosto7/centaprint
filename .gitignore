@@ -1,2 +1,7 @@
 localhost.zip
 .vscode
+./pages/img
+../pages/img
+../pages/img/*
+../files
+./files

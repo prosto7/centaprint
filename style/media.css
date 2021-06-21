@@ -60,16 +60,6 @@
     }
 }
 
-/* 
-@media (max-width: 2000px) {
-    .fullscreen-bg {
-    height: 95vh;}
-}
-
-/* @media (max-width: 1795px) {
-    .fullscreen-bg {
-    height: 85vh;}
-} */
 
 @media (max-width: 1680px) and (min-width:1480px) {
     .fullscreen-bg {
@@ -156,8 +146,6 @@ margin-bottom: 20px;
         font-family: 'Montserrat';
     }
 
-
-
     /* header_for_mobi end*/
 
 
@@ -232,14 +220,6 @@ margin-bottom: 20px;
 
 @media (max-width: 380px) {
 
-
-    /* .container__description h3 {
-                text-align: center;
-                font-weight: 700;
-                font-size: 28px;
-                color: white;
-                margin-bottom: 50px;
-                } */
     .container__description .btn {
         background-color: #F2EB3B;
         border: none;

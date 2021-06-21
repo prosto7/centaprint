@@ -216,7 +216,7 @@ if ( is_session_started() === FALSE ) session_start();
                 <h2 class="head_about_us mb-5 mt-5">Новости</h2>
             </div>
             <?php
-// echo '<div class="container mb-4">';
+
 echo '<div id="result" class="row">';
 $news = News::getFourNews();
 

@@ -506,7 +506,6 @@ text-align: center;
 .services_blocks__with_img {
     width: 100% ;
     height: 100%;
-    /* background-image: url(../img/services/flexo.jpg); */
     background-size: cover;
     background-repeat: no-repeat;
     position: relative;

@@ -3,16 +3,3 @@
     box-shadow : 0 0 24px 10px rgba(0, 0, 0, 0.8);
     transition: all 0.5s ease 0s;
 }
-
-
-/* img:hover {
-    -webkit-transform: scale(1.1);
-    -moz-transform: scale(1.1);
-    -o-transform: scale(1.1);
-} 
-
-
-   .cart_back img:hover {
-       
-    transform: scale(1.2) !important; /* Увеличиваем масштаб */
-   

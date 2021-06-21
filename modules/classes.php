@@ -1,7 +1,5 @@
 <?php
-
-$root = $_SERVER['DOCUMENT_ROOT'] . '/new_site/';
-// $main_path = 'http://localhost/new_site/';
+$root = $_SERVER['DOCUMENT_ROOT'] . '/';
 
 include_once "config.php";
 class News {
@@ -22,12 +20,9 @@ class News {
     static function getNews() {
         try {
                 $pdo = Tools::connect();
-                // если категория не выбрана на странице саталог то выбираем все товары
                 $ps = $pdo->query("SELECT * FROM news ORDER BY id DESC LIMIT 4,10");
                 while ($row=$ps->fetch()) {
                 $new = new News($row['newsname'],$row['info'],$row['imagepath'],$row['newdate'],$row['id']); 
-                // создадим массив экземпляров класса new
-                // $news[]=$new;
                 $news[] = $new;
             }
                 return  $news;
@@ -46,7 +41,6 @@ static function updateToDb() {
 
     $pdo = Tools::connect();
     $sql = "UPDATE `news` SET `newsname`=:newsname, `info`=:info, `imagepath`=:imagepath, `newdate`=:newdate WHERE `id`=:id";
-
                     $stmt= $pdo->prepare($sql);
                     $stmt->bindParam(':newsname', $newsname);
                     $stmt->bindParam(':info', $info);
@@ -54,20 +48,15 @@ static function updateToDb() {
                     $stmt->bindParam(':newdate', $newdate);
                     $stmt->bindParam(':id', $id);
                     $stmt->execute(); 
-
-
 }
 
 static function getFourNews($id=0) {
         try {
 
                 $pdo = Tools::connect();
-                // если категория не выбрана на странице саталог то выбираем все товары
                 $ps = $pdo->query("SELECT * FROM news LIMIT 4");
                 while ($row=$ps->fetch()) {
                 $new = new News($row['newsname'],$row['info'],$row['imagepath'],$row['newdate'],$row['id']); 
-                // создадим массив экземпляров класса item
-                // $news[]=$new;
                 $news[] = $new;
             }
                 return  $news;
@@ -76,53 +65,48 @@ static function getFourNews($id=0) {
             return false;
         }
     } 
-    function drawItem()
-    { 
-      
-        echo '<div class="col-md-3 col-xs-3 col">';
-        if (isset($_SESSION['register']))
-        {  
-            echo "<div style='border: solid 1px gray;'>";
-            echo "<a  role='button' class='btn btn-warning m-1' href='/pages/update.php?id={$this->id}'>Редактировать</a>"; 
+        function drawItem()
+        { 
+        
+            echo '<div class="col-md-3 col-xs-3 col">';
+            if (isset($_SESSION['register']))
+            {  
+                echo "<div style='border: solid 1px gray;'>";
+                echo "<a  role='button' class='btn btn-warning m-1' href='/pages/update.php?id={$this->id}'>Редактировать</a>"; 
+            }
+            else {
+            }
+            echo "<a class='card-body_href' href='/pages/news.php?id={$this->id}'>";
+            echo '   <div class="container-fluid card-body p-0">';
+        
+            echo "<img class='card-img-top picture' src='{$this->imagepath}' alt=''>";
+        
+            echo "<div class='text_block'><h5 class=''>$this->newsname</h5></div>";
+            echo "<p class='card-text lead'>$this->info</p>";
+            echo "<a href='/pages/news.php?id={$this->id}' class='btn_news'>Подробнее</a>";
+    
+            echo '    </div>';
+        
+            echo '    </div>';
+            echo ' </a>';
+        
+            if (isset($_SESSION['register']))
+            {  
+            echo ' </div>';
+            }
+            else {
+            }
         }
-        else {
-        }
-        echo "<a class='card-body_href' href='/pages/news.php?id={$this->id}'>";
-        echo '   <div class="container-fluid card-body p-0">';
-      
-        echo "<img class='card-img-top picture' src='{$this->imagepath}' alt=''>";
-      
-        echo "<div class='text_block'><h5 class=''>$this->newsname</h5></div>";
-        echo "<p class='card-text lead'>$this->info</p>";
-        echo "<a href='/pages/news.php?id={$this->id}' class='btn_news'>Подробнее</a>";
-  
-        echo '    </div>';
-       
-        echo '    </div>';
-        echo ' </a>';
-       
-        if (isset($_SESSION['register']))
-        {  
-        echo ' </div>';
-        }
-        else {
-
-        }
-    // }
-     
-    }
     function drawItemOnNewsPage()
     {
    
       
         echo '<div class="row vh-100 mb-3 card cart__news-mini">';
-//    echo "<img class='card-img-top picture' src='{$this->imagepath}' alt=''>";
         echo '<div class="col cart__item">';
         echo "<a href='news.php?id={$this->id}' class='exampleModal{$this->id}'>";
         echo "<h5 class='card__item-title'>$this->newsname</h5>";
         echo '</a>'; 
         echo "<img src='../{$this->imagepath}' alt=''>";
-        // echo "<h5 class='card__item-name'>$this->newsname</h5>";
         echo "<p class='card__item-text mt-2'>$this->info</p>";
         echo '</div>';
 
@@ -144,13 +128,10 @@ static function getFourNews($id=0) {
 static function getLastNews () {
     try {
         $pdo = Tools::connect();
-        // если категория не выбрана на странице саталог то выбираем все товары
         $ps = $pdo->query("SELECT * FROM news ORDER BY id DESC 
         LIMIT 4 ");
         while ($row=$ps->fetch()) {
         $mainnew = new News($row['newsname'],$row['info'],$row['imagepath'],$row['newdate'],$row['id']); 
-        // создадим массив экземпляров класса item
-        // $news[]=$new;
         $mainnews[] = $mainnew;
     }
         return  $mainnews;
@@ -167,8 +148,6 @@ static function getLastNews () {
             $stmt->execute(array(':id'));
             while ($id=$stmt->fetchColumn($id)){
                 $mainnew = new News($row['id']); 
-                // создадим массив экземпляров класса item
-                // $news[]=$new;
                 $mainnews[] = $mainnew;
             }
             return  $mainnews;
@@ -196,11 +175,10 @@ function drawMainNews() {
     
 }
 }
-// класс в блоке news 
+
 class MyNews extends News {
     function __construct($newsname ,$info,$imagepath,
 $newdate ) {
-    // $this->category=$category;
     $this->newsname=$newsname;
     $this->info=$info;
     $this->imagepath=$imagepath;
@@ -235,18 +213,13 @@ static function changeNews() {
                 }
             }
 
-
             static function getLastNews () {
                 try {
                     $pdo = Tools::connect();
-                    
-                    // если категория не выбрана на странице саталог то выбираем все товары
                     $ps = $pdo->query("SELECT * FROM news ORDER BY id DESC 
                     LIMIT 3");
                     while ($row=$ps->fetch()) {
                     $mainnew = new MyNews($row['newsname'],$row['info'],$row['imagepath'],$row['newdate'],$row['id']); 
-                    // создадим массив экземпляров класса item
-                    // $news[]=$new;
                     $mainnews[] = $mainnew;
                 }
 

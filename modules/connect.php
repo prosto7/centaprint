@@ -11,7 +11,6 @@ function connect($host="127.0.0.1", $user="root", $pass="", $dbname="print") {
         echo "Ошибка при загрузке кодировки символов utf8".mysqli_error($link);
         exit;
     }
-  
     return $link;
 }
 

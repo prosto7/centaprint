@@ -4,8 +4,8 @@ include("../modules/connect.php");
 include_once("../modules/classes.php");
 include_once("header.php");
 ?>
- <main class='main ml-3' id='main' style="margin-top:150px;">
- <?
+<main class='main ml-3' id='main' style="margin-top:150px;">
+    <?
     // форма логина
 $echo = "<div class='container table'>
 <div class='tale-wrapper'>
@@ -165,12 +165,10 @@ if (isset($_POST['del_news'])) {
 }
 ?>
 
-        
-            <?php echo $echo;?>
-        </main>
-    </div>
-    <div style="position:fixed; bottom:0; width:100%;">
+
+    <?php echo $echo;?>
+</main>
+</div>
+<div style="position:fixed; bottom:0; width:100%;">
     <?php include_once('footer.php');?>
-    </div>
-
-
+</div>

@@ -7,10 +7,7 @@ include_once("header.php");
     $link = connect();
     $product = mysqli_query($link, "SELECT * FROM `news` WHERE `id` = '$product_id'");
     $product = mysqli_fetch_assoc($product);
-
-
 ?>
-
 
 <div style="margin-top: 150px" class="container">
     <h3>Update News</h3>

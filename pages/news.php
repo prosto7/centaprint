@@ -2,7 +2,6 @@
 include_once("header.php"); 
 include_once("../modules/classes.php");
 include_once("../modules/connect.php");
-    // $product_id = $_GET['id'];
     ?>
 <div class="container-fluid" id="main_news_container"> 
 <div class="container-fluid p-0" >  

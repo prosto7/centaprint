@@ -1,19 +1,6 @@
-<?php function is_session_started()
-{
-    if (php_sapi_name() !== 'cli') {
-        if (version_compare(phpversion(), '5.4.0', '>=')) {
-            return session_status() === PHP_SESSION_ACTIVE ? TRUE : FALSE;
-        } else {
-            return session_id() === '' ? FALSE : TRUE;
-        }
-    }
-    return FALSE;
-}
-
-
-
-if (is_session_started() === FALSE) session_start();
+<?php session_start();
 include_once($_SERVER['DOCUMENT_ROOT'] . '/modules/classes.php') ?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -25,15 +12,15 @@ include_once($_SERVER['DOCUMENT_ROOT'] . '/modules/classes.php') ?>
     <meta name="description" content="Маркировка по честному знаку. Печать цветных этикеток с кодом DataMatrix. Услуги по маркировке молочной продукции, одежды и других товаров попадающих под обязательную маркировку.">
     <meta name="Keywords" content="честный знак, маркировка, этикетка, печать этикеток, принтер этикеток, маркировка молочной продукции">
     <title>CentaPrint - инновация маркировки.</title>
-    <link rel="shortcut icon" href="/img/qr.jpg" type=image/jpg">
-    <link rel="stylesheet" href="/js/modal/jquery.arcticmodal-0.3.css">
+    <link rel="shortcut icon" href="img/qr.jpg" type=image/jpg">
+    <link rel="stylesheet" href="js/modal/jquery.arcticmodal-0.3.css">
     <!-- arcticModal theme -->
-    <link rel="stylesheet" href="/js/modal/themes/simple.css">
+    <link rel="stylesheet" href="js/modal/themes/simple.css">
     <!--end modal window  -->
-    <link rel="stylesheet" href='/style/style.css'>
-    <link rel="stylesheet" href='/style/effects.css'>
-    <link rel="stylesheet" href="/style/media.css">
-    <link rel="stylesheet" href="/style/news.css">
+    <link rel="stylesheet" href='style/effects.css'>
+    <link rel="stylesheet" href='style/style.css'>
+    <link rel="stylesheet" href="style/media.css">
+    <link rel="stylesheet" href="style/news.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
     <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
@@ -43,8 +30,8 @@ include_once($_SERVER['DOCUMENT_ROOT'] . '/modules/classes.php') ?>
     </script>
 
     <script src="https://unpkg.com/imask"></script>
-    <script src='/js/formMail.js'></script>
-    <script src='/js/jquery.liTextLength.js'></script>
+    <script src='js/formMail.js'></script>
+    <script src='js/jquery.liTextLength.js'></script>
     <!-- Yandex.Metrika counter -->
     <script type="text/javascript">
         (function(m, e, t, r, i, k, a) {
@@ -68,18 +55,36 @@ include_once($_SERVER['DOCUMENT_ROOT'] . '/modules/classes.php') ?>
     </noscript>
     <!-- /Yandex.Metrika counter -->
     <!-- arcticModal -->
-    <script src="/js/modal/jquery.arcticmodal-0.3.min.js"></script>
-
-
+    <script src="js/modal/jquery.arcticmodal-0.3.min.js"></script>
 </head>
 
 <body>
-
     <div id="main_container" class="container-fluid p-0">
         <!-- header -->
-
-
-
         <nav class="navbar navbar-expand-lg navbar-light opacity_menu container-fluid p-0" id="m2">
             <?php include_once("menu.php"); ?>
         </nav>
+
+        <?php
+        if (isset($_GET['page'])) {
+            $page = $_GET['page'];
+            if ($page === '1') include_once("services_contact.php");
+            if ($page === '2') include_once("news.php");
+            if ($page === '3') include_once("recvizit.php");
+            if ($page === 'admin_page') include_once("admin.php");
+
+            if (isset($_SESSION['register']) && $page === 'update') include_once("update.php");
+        } else {
+            include_once("pages/main.php");
+        }
+        include_once('footer.php');
+        ?>
+        <!-- footer -->
+
+        <!-- footer end -->
+    </div>
+
+
+</body>
+
+</html>

@@ -1,4 +1,2 @@
-<?php
-session_start();
-include_once ($root . "pages/main.php");
-?>
+<?php session_start();
+require_once('pages/new_index.php');

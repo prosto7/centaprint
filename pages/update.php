@@ -1,16 +1,12 @@
 <?php
-session_start();
-include_once($_SERVER['DOCUMENT_ROOT'] . '/modules/connect.php');
-include_once($_SERVER['DOCUMENT_ROOT'] . '/modules/classes.php');
-include_once("header.php");
-var_dump($_GET)
+
 $product_id = $_GET['id'];
 $link = connect();
 $product = mysqli_query($link, "SELECT * FROM `news` WHERE `id` = '$product_id'");
 $product = mysqli_fetch_assoc($product);
 ?>
 
-<div style="margin-top: 150px" class="container">
+<div style="margin-top: 120px; max-width:60vw; min-height:78vh" class="container">
     <h3>Update News</h3>
     <form class="form-group" action="" enctype="multipart/form-data" method="post">
         <input type="hidden" name="id" value="<?= $product['id'] ?>">
@@ -28,15 +24,13 @@ $product = mysqli_fetch_assoc($product);
         <input id="update_img" type="file" accept="image/*" name="imagepath" value="<?= $product['imagepath'] ?>">
         <br>
         <br>
-
-        <br> <br>
         <button type="submit" name="update_news" class="btn btn-info">Update</button>
         <button type="submit" class="btn btn-danger">Cancel</button>
     </form>
 </div>
 
 <?php
-var_dump($product['imagepath']);
+
 include_once("footer.php");
 
 if (isset($_POST['update_news'])) {

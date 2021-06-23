@@ -80,7 +80,7 @@ class News
         echo '<div class="col-md-3 col-xs-3 col">';
         if (isset($_SESSION['register'])) {
             echo "<div style='border: solid 1px gray;'>";
-            echo "<a  role='button' class='btn btn-warning m-1' href='index.php?page=update?id={$this->id}'>Редактировать</a>";
+            echo "<a  role='button' class='btn btn-warning m-1' href='index.php?page=update&id={$this->id}'>Редактировать</a>";
         } else {
         }
         echo "<a class='card-body_href' href='index.php?page=2&id={$this->id}'>";

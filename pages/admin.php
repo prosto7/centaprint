@@ -1,7 +1,7 @@
-<main class='main ml-3' id='main' style="margin-top:150px;">
+<main class='main ml-3' id='main' style="margin-top:150px; margin-bottom:150px;">
     <?
     // form log in
-    $echo = "<div class='container table'>
+    $echo = "<div class='container table mr-5 login_enter_block'>
 <div class='tale-wrapper'>
             <div class='table-title'><h4>Войти в панель администратора</h4></div>
             <div class='mb-3 table-content'>
@@ -154,10 +154,7 @@
     }
     ?>
 
-
-    <?php echo $echo; ?>
+    <?php echo $echo;
+    ?>
 </main>
-</div>
-<div style="position:fixed; bottom:0; width:100%;">
-    <?php include_once('footer.php'); ?>
 </div>

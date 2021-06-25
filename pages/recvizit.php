@@ -1,4 +1,3 @@
-<?php include_once("header.php");  ?>
 <div class="container" style="margin-top:150px;">
     <table class="info_company" style="width:100%; border: solid 1px black; border-collapse: collapse;">
         <tr>

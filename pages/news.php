@@ -1,4 +1,3 @@
-<?php include_once($_SERVER['DOCUMENT_ROOT'] . '/modules/classes.php') ?>
 <div class="container-fluid" id="main_news_container">
     <div class="container-fluid p-0">
         <section class="row gx-5" id="box_for_all_news">
@@ -17,7 +16,6 @@
             <div class="col-xl-3 mt-5" id="additional_news">
                 <div class="container-fluid">
 
-
                     <?php
 
                     $news = News::getNews();
@@ -25,7 +23,6 @@
                         $new->drawItemOnNewsPage();
                     }
                     ?>
-
 
                 </div>
             </div>
@@ -40,12 +37,13 @@ include_once('footer.php');
 
 if (isset($_GET['id'])) {
 
-    $news_id = ($_GET['id']);
-    $link = connect();
-    $new_id = mysqli_query($link, "SELECT * FROM `news` WHERE id='$news_id'");
-    $new_id = mysqli_fetch_all($new_id);
-    $news_id_for_draw = $new_id[0];
-    echo "<script>$('.exampleModal$news_id_for_draw[0]').ready(function(){
+    $pdo = Tools::connect();
+    $ps = $pdo->prepare("SELECT * FROM `news` WHERE id= ?");
+    $ps->execute([$_GET['id']]);
+    while ($row = $ps->fetch()) {
+        $news_id_for_draw = $row;
+    }
+    echo "<script>$('.exampleModal{$news_id_for_draw['id']}').ready(function(){
     $('#exampleModal').arcticmodal();});</script>";
 }
 ?>
@@ -56,17 +54,17 @@ if (isset($_GET['id'])) {
         <div class="container mt-5">
             <div class="row">
                 <div class="container text_title_modal">
-                    <h2><?= $news_id_for_draw[2] ?></h2>
+                    <h2><?= $news_id_for_draw['newsname'] ?></h2>
                 </div>
             </div>
             <div class="row">
                 <div class="container date_text_modal">
-                    <p><?= $news_id_for_draw[5] ?></p>
+                    <p><?= $news_id_for_draw['newdate'] ?></p>
                 </div>
             </div>
             <div class="row">
                 <div class="container text_desc">
-                    <p><?= str_replace(array("\r\n", "\n"), array("<p>", "</p>"), $news_id_for_draw[3]) ?></p>
+                    <p><?= str_replace(array("\r\n", "\n"), array("<p>", "</p>"), $news_id_for_draw['info']) ?></p>
                 </div>
             </div>
         </div>

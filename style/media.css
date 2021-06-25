@@ -52,13 +52,16 @@
     .fullscreen-bg {
         height: 70vh;
     }
+.cart__news>h5  {
+    font-size: 26px;
+}
+.cart__news>h4 {
+    font-size: 24px;
 }
 
-@media (max-width: 1480px) {
-    .fullscreen-bg {
-        height: 70vh;
-    }
 }
+
+
 
 
 @media (max-width: 1680px) and (min-width:1480px) {
@@ -72,7 +75,41 @@
 
 @media (max-width:700px) {
 
+.container {
+    margin: 0;
+    padding: 0;
+}
+    /* start admin page */
+#block_admin_forms {
+        max-width:370px;
 
+    }
+
+.table {
+    max-width:370px;
+}
+
+#add_news_id, #add_news_id>input, #add_news_id>label>input, #add_news_id>label>textarea ,#cat_num,#cat_num>label>input{
+
+    max-width: 360px ; 
+}
+.form-group, .form-group>select,  #add_news_id>label>select,#cat_num,#cat_num>label>select,  #del_news>label>select{
+    max-width: 350px;
+}
+
+#news_name {
+    max-width: 370px;
+}
+
+form>input {
+    min-width: 70px;
+    min-height: 30px;
+}
+
+#add_news_id>label>input,#add_news_id>label>textarea  {
+    width: 370px;
+}
+/* end admin page */
     #cheme p {
         font-size: 12px;
         line-height: 12px;

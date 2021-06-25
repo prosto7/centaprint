@@ -30,5 +30,13 @@
         <li class="nav-item">
             <a class="nav-link" href="index.php?page=3">Реквизиты</a>
         </li>
+        <?php
+        if (isset($_SESSION['register'])) {
+
+            echo "<li class='nav-item'><a href='pages/out.php' class='nav-link'>Выйти</a></li>";
+        }
+
+        ?>
+
     </ul>
 </div>

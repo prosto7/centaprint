@@ -1,7 +1,7 @@
 <?php
 $root = $_SERVER['DOCUMENT_ROOT'] . '/';
+require_once "config.php";
 
-include_once "config.php";
 class News
 {
     public $id;
@@ -37,25 +37,6 @@ class News
             echo $e->getMessage();
             return false;
         }
-    }
-
-    static function updateToDb()
-    {
-        $newsname = $_POST["newsname"];
-        $info = $_POST["info"];
-        $imagepath = "img/news/" . $_FILES['imagepath']['name'];
-        $newdate = $_POST["date"];
-        $id = $_POST['id'];
-
-        $pdo = Tools::connect();
-        $sql = "UPDATE `news` SET `newsname`=:newsname, `info`=:info, `imagepath`=:imagepath, `newdate`=:newdate WHERE `id`=:id";
-        $stmt = $pdo->prepare($sql);
-        $stmt->bindParam(':newsname', $newsname);
-        $stmt->bindParam(':info', $info);
-        $stmt->bindParam(':imagepath', $imagepath);
-        $stmt->bindParam(':newdate', $newdate);
-        $stmt->bindParam(':id', $id);
-        $stmt->execute();
     }
 
     static function getFourNews($id = 0)
@@ -100,19 +81,12 @@ class News
     }
     function drawItemOnNewsPage()
     {
-
-
         echo '<div class="row vh-100 mb-3 card cart__news-mini">';
         echo "<a href='index.php?page=2&id={$this->id}' class='exampleModal{$this->id}'>";
         echo '<div class="col cart__item">';
-
         echo "<h5 class='card__item-title'>$this->newsname</h5>";
-
-
         echo "<img src='../{$this->imagepath}' alt=''>";
-
         echo "<p class='card__item-text mt-2'>$this->info</p>";
-
         echo '</div>';
         echo '</a>';
         echo '</div>';
@@ -168,32 +142,42 @@ class MyNews extends News
     }
     static function changeNews()
     {
-        echo '<form id="cat_num" action="" method="post" enctype="multipart/form-data">';
-        echo '<div class="form-group"><label for="category"><select name="news_name" id="news_name">';
+
         $pdo = Tools::connect();
         $ps = $pdo->query("SELECT * FROM news");
         while ($row = $ps->fetch()) {
             echo "<option value='{$row["id"]}'>'{$row["newsname"]}'</option>";
         }
-        echo '</select>';
-        echo '<input type="submit" name="del_news" value="Удалить" value="Удалить" class="btn btn-sm btn-danger">';
-        echo '</div>';
-        echo '</form>';
-        echo '<br>';
+        echo "<script>
+                            $(document).ready(function(){
+                            $('#news_name').on('change', function() {
+                            $('#del_news input[type=submit]').prop('disabled', false);
+                            });});</script>";
+        echo "<script>
+                            $(document).ready(function() {
+                                $('#del_news_button').click(function() {
+                                    return confirm('Do you want to Delete ?');
+                                });
+                            });
+                        </script>";
+        echo "<script>
+    $(document).ready(function(){
+    $('#hide').removeClass('d-none');
+    $('#text_notification').text('Новость Удалена');
+    window.setTimeout(function(){   
+    $('#hide').addClass('d-none');
+    let baseUrl = window.location.URL;
+    window.history.pushState('name', '', baseUrl);
+    },5000);});</script>";
     }
     function addToDb()
     {
-        try {
-            $pdo = Tools::connect();
-            $ps = $pdo->prepare("INSERT INTO news (newsname,info,imagepath,newdate)
-                    VALUES (:newsname,:info,:imagepath,:newdate)");
-            $add = (array)$this;
-            array_shift($add);
-            $ps->execute($add);
-        } catch (PDOException $e) {
-            echo $e->getMessage();
-            return false;
-        }
+
+        $pdo = Tools::connect();
+        $ps = $pdo->prepare("INSERT INTO news (newsname,info,imagepath,newdate) VALUES (:newsname,:info,:imagepath,:newdate)");
+        $add = (array)$this;
+        array_shift($add);
+        $ps->execute($add);
     }
 
     static function getLastNews()
@@ -212,5 +196,106 @@ class MyNews extends News
             echo $e->getMessage();
             return false;
         }
+    }
+}
+
+
+class NewsUpdates
+{
+
+    public function getUpdateData($id)
+    {
+        $pdo = Tools::connect();
+        $ps = $pdo->query("SELECT * FROM `news` WHERE `id` = '$id'");
+        while ($row = $ps->fetch()) {
+            $new = new News($row['newsname'], $row['info'], $row['imagepath'], $row['newdate'], $row['id']);
+            $news[] = $new;
+        }
+        return  $news;
+    }
+
+    public function drawUpdateData($news_id)
+    {
+        $news = $news_id[0];
+        echo '<div style="margin-top: 120px; max-width:60vw; min-height:78vh" class="container">
+        <h3>Update News</h3>';
+        echo '<form class="form-group" action="" enctype="multipart/form-data" method="post" id="update_news_form">';
+        echo "<input type='hidden' name='id' value='{$news->id}'>";
+        echo '<label for="update_theme">Тема Новости</label>';
+        echo "<input id='update_theme' class='form-control' type='text' name='newsname' value=' {$news->newsname}'><label for='update_desc'>Описание новости</label>";
+
+        echo "<textarea id='update_desc' class='form-control' name='info'>{$news->info}</textarea><label for='update_date'>Дата</label>
+        <input id='update_date' class='form-control' type='date' name='date' value='{$news->newdate}'><br><div> Картинка новости</div>";
+        echo "<img class='card-img-top picture' style='width:20vw' src='{$news->imagepath}' alt=''><br><br><input id='update_img' type='file' accept='image/*' name='imagepath' value='{$news->imagepath}'>
+        <br>
+        <br>
+        <button type='submit' name='update_news' class='btn btn-info' disabled>Update</button>
+        <button type='submit' class='btn btn-danger' disabled>Cancel</button>
+    </form>
+    </div>'";
+        echo "<script>
+      $(document).ready(function() {
+          $('#update_news_form').on('change', function() {
+              $('#update_news_form button').prop('disabled', false);
+          });
+      });
+  </script>";
+    }
+
+    function updateToDb($newsname, $info, $imagepath, $newdate, $id)
+    {
+
+        $pdo = Tools::connect();
+        $sql = "UPDATE `news` SET `newsname`=:newsname, `info`=:info, `imagepath`=:imagepath, `newdate`=:newdate WHERE `id`=:id";
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindParam(':newsname', $newsname);
+        $stmt->bindParam(':info', $info);
+        $stmt->bindParam(':imagepath', $imagepath);
+        $stmt->bindParam(':newdate', $newdate);
+        $stmt->bindParam(':id', $id);
+        $stmt->execute();
+    }
+
+    static function deleteNews()
+    {
+        try {
+            $pdo = Tools::connect();
+            $ps = $pdo->prepare("DELETE FROM `news` WHERE id = :id");
+            $ps->bindParam(':id', $id);
+            $id = $_POST['news_name'];
+            $ps->execute();
+        } catch (PDOException $e) {
+            echo $e->getMessage();
+            return false;
+        }
+        echo '<script>window.location=document.URL</script>';
+    }
+}
+
+
+class Categories
+{
+
+    static function selectCategory()
+    {
+        $pdo = Tools::connect();
+        $ps = $pdo->query("SELECT * FROM categories");
+        while ($row = $ps->fetch()) {
+            echo "<option value='{$row["id"]}'>{$row['category']}</option>";
+        }
+    }
+    static function deleteCat()
+    {
+        try {
+            $category = $_POST['category'];
+            $pdo = Tools::connect();
+            $ps = $pdo->prepare("DELETE FROM `categories` WHERE category = :category");
+            $ps->bindParam(':category', $category);
+            $ps->execute();
+        } catch (PDOException $e) {
+            echo $e->getMessage();
+            return false;
+        }
+        echo '<script>window.location=document.URL</script>';
     }
 }

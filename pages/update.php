@@ -3,7 +3,7 @@
 <?php
 
 $news_id = $_GET['id'];
-$news_update = new NewsUpdates;
+$news_update = new DeletionEditingNews;
 $out_news = $news_update->getUpdateData($news_id);
 $news_update->drawUpdateData($out_news);
 
@@ -19,7 +19,7 @@ if (isset($_POST['update_news'])) {
         $user_props = $news_update->getUpdateData($id);
         $path = $user_props[0]->imagepath;
     }
-    $add = new NewsUpdates;
+    $add = new DeletionEditingNews;
     $add->updateToDb(trim($_POST['newsname']), $_POST['info'], $path, $_POST['date'], $_POST['id']);
     echo '<script>window.location="../index.php"</script>';
 }

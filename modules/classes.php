@@ -39,7 +39,7 @@ class News
         }
     }
 
-    static function getFourNews($id = 0)
+    static function getFourNewsOnMainPage($id = 0)
     {
         try {
 
@@ -55,7 +55,7 @@ class News
             return false;
         }
     }
-    function drawItem()
+    function drawNews()
     {
 
         echo '<div class="col-md-3 col-xs-3 col">';
@@ -79,7 +79,7 @@ class News
         } else {
         }
     }
-    function drawItemOnNewsPage()
+    function drawSideNewsPage()
     {
         echo '<div class="row vh-100 mb-3 card cart__news-mini">';
         echo "<a href='index.php?page=2&id={$this->id}' class='exampleModal{$this->id}'>";
@@ -109,8 +109,6 @@ class News
         }
     }
 
-
-
     function drawMainNews()
     {
 
@@ -127,7 +125,7 @@ class News
     }
 }
 
-class MyNews extends News
+class NewNews extends News
 {
     function __construct(
         $newsname,
@@ -140,36 +138,7 @@ class MyNews extends News
         $this->imagepath = $imagepath;
         $this->newdate = $newdate;
     }
-    static function changeNews()
-    {
 
-        $pdo = Tools::connect();
-        $ps = $pdo->query("SELECT * FROM news");
-        while ($row = $ps->fetch()) {
-            echo "<option value='{$row["id"]}'>'{$row["newsname"]}'</option>";
-        }
-        echo "<script>
-                            $(document).ready(function(){
-                            $('#news_name').on('change', function() {
-                            $('#del_news input[type=submit]').prop('disabled', false);
-                            });});</script>";
-        echo "<script>
-                            $(document).ready(function() {
-                                $('#del_news_button').click(function() {
-                                    return confirm('Do you want to Delete ?');
-                                });
-                            });
-                        </script>";
-        echo "<script>
-    $(document).ready(function(){
-    $('#hide').removeClass('d-none');
-    $('#text_notification').text('Новость Удалена');
-    window.setTimeout(function(){   
-    $('#hide').addClass('d-none');
-    let baseUrl = window.location.URL;
-    window.history.pushState('name', '', baseUrl);
-    },5000);});</script>";
-    }
     function addToDb()
     {
 
@@ -179,28 +148,10 @@ class MyNews extends News
         array_shift($add);
         $ps->execute($add);
     }
-
-    static function getLastNews()
-    {
-        try {
-            $pdo = Tools::connect();
-            $ps = $pdo->query("SELECT * FROM news ORDER BY id DESC 
-                    LIMIT 3");
-            while ($row = $ps->fetch()) {
-                $mainnew = new MyNews($row['newsname'], $row['info'], $row['imagepath'], $row['newdate'], $row['id']);
-                $mainnews[] = $mainnew;
-            }
-
-            return  $mainnews;
-        } catch (PDOException $e) {
-            echo $e->getMessage();
-            return false;
-        }
-    }
 }
 
 
-class NewsUpdates
+class DeletionEditingNews
 {
 
     public function getUpdateData($id)
@@ -241,7 +192,6 @@ class NewsUpdates
       });
   </script>";
     }
-
     function updateToDb($newsname, $info, $imagepath, $newdate, $id)
     {
 
@@ -256,6 +206,29 @@ class NewsUpdates
         $stmt->execute();
     }
 
+    static function drawFormToDeleteNews()
+    {
+
+        $pdo = Tools::connect();
+        $ps = $pdo->query("SELECT * FROM news");
+        while ($row = $ps->fetch()) {
+            echo "<option value='{$row["id"]}'>'{$row["newsname"]}'</option>";
+        }
+        echo "<script>
+                            $(document).ready(function(){
+                            $('#news_name').on('change', function() {
+                            $('#del_news input[type=submit]').prop('disabled', false);
+                            });});</script>";
+        echo "<script>
+                            $(document).ready(function() {
+                                $('#del_news_button').click(function() {
+                                    return confirm('Do you want to Delete ?');
+                                });
+                            });
+                        </script>";
+    }
+
+
     static function deleteNews()
     {
         try {
@@ -268,13 +241,13 @@ class NewsUpdates
             echo $e->getMessage();
             return false;
         }
-        echo '<script>window.location=document.URL</script>';
     }
 }
 
 
 class Categories
 {
+
 
     static function selectCategory()
     {
@@ -284,18 +257,31 @@ class Categories
             echo "<option value='{$row["id"]}'>{$row['category']}</option>";
         }
     }
-    static function deleteCat()
+
+    static function addCategory($category)
     {
         try {
-            $category = $_POST['category'];
             $pdo = Tools::connect();
-            $ps = $pdo->prepare("DELETE FROM `categories` WHERE category = :category");
+            $ps = $pdo->prepare("INSERT INTO `categories` (`category`) VALUES (:category)");
             $ps->bindParam(':category', $category);
             $ps->execute();
         } catch (PDOException $e) {
             echo $e->getMessage();
             return false;
         }
-        echo '<script>window.location=document.URL</script>';
+    }
+    static function deleteCat()
+    {
+
+        try {
+            $catid = $_POST['catid'];
+            $pdo = Tools::connect();
+            $ps = $pdo->prepare("DELETE FROM `categories` WHERE id = :catid");
+            $ps->bindParam(':catid', $catid);
+            $ps->execute();
+        } catch (PDOException $e) {
+            echo $e->getMessage();
+            return false;
+        }
     }
 }

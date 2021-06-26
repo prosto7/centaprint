@@ -221,10 +221,10 @@ if (is_session_started() === FALSE) session_start();
     <?php
 
     echo '<div id="result" class="row">';
-    $news = News::getFourNews();
+    $news = News::getFourNewsOnMainPage();
 
     foreach ($news as $new) {
-        $new->drawItem();
+        $new->drawNews();
     }
     // echo '</div>';
     echo '</div>';

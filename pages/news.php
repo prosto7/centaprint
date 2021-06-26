@@ -20,7 +20,7 @@
 
                     $news = News::getNews();
                     foreach ($news as $new) {
-                        $new->drawItemOnNewsPage();
+                        $new->drawSideNewsPage();
                     }
                     ?>
 

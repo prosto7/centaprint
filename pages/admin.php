@@ -2,7 +2,6 @@
     <main class='main ml-3' id='main' style="margin-top:150px; margin-bottom:150px;">
         <?
         echo '<div class="d-none container table mt-5" id="hide"><h5 id="text_notification" class="text-success"></h5></div>';
-        $statusAdd = '<div class="container table mt-5"><h5 class="text-success">Новость Добавлена</h5></div>';
 
         // form log in
         $echo = "<div class='container table mr-5 login_enter_block'>
@@ -43,11 +42,12 @@
                         <input type="text" class="form-control" name="category" id="category_text" placeholder="Категория">
                         <br>
                         <select class="form-control" name="catid" id="catid">
+                            <option selected disabled>Выберете категорию</option>
                             <?php Categories::selectCategory(); ?>
                         </select>
                         <br>
-                        <input type="submit" name="add_cat" id="add_cat" class="btn btn-sm btn-success" value="Добавить">
-                        <input type="submit" name="del_cat" value="Удалить" value="Удалить" class="btn btn-sm btn-danger">
+                        <input type="submit" name="add_cat" id="add_cat" class="btn btn-sm btn-success" value="Добавить" disabled>
+                        <input type="submit" name="del_cat" value="Удалить" value="Удалить" class="btn btn-sm btn-danger" disabled>
                     </label>
                 </form>
                 <h5 id="errorMessCat"></h5>
@@ -57,8 +57,7 @@
                     <label for="news_name"><select class="form-control" name="news_name" id="news_name">
                             <option selected disabled>Выберете новость</option>
                             <?php
-                            MyNews::changeNews();
-
+                            DeletionEditingNews::drawFormToDeleteNews();
                             ?>
                         </select>
                         <br>
@@ -69,11 +68,13 @@
                 <br>
                 <!-- // out the form news -->
 
+
                 <h2>Добавить новость</h2><br>
 
-                <form class="form-group" id="add_news_id" action="#add_news" method="post" enctype="multipart/form-data">
-                    <label for="catid">
-                        <select class="form-control" name="catid" id="catid">
+                <form class="form-group" id="add_news_id" action="" method="post" enctype="multipart/form-data">
+                    <label for="catid_news">
+                        <select class="form-control" name="catid_news" id="catid_news">
+                            <option selected disabled>Выберете категорию</option>
                             <?php Categories::selectCategory(); ?>
                         </select>
                     </label>
@@ -109,6 +110,9 @@
                     $('#add_news_id').on('change', function() {
                         $('#add_news_id input[type=submit]').prop('disabled', false);
                     });
+                    $('#catid, #category_text').on('change', function() {
+                        $('#cat_num input[type=submit]').prop('disabled', false);
+                    });
                 });
             </script>
             <!-- 
@@ -123,33 +127,58 @@
 
                     $path = "./img/news/" . $_FILES['imagepath']['name'];
                     move_uploaded_file($_FILES['imagepath']['tmp_name'], $path);
-                    $add = new MyNews(trim($_POST['name_news']), $_POST['info'], $path, $_POST['date']);
+                    $add = new NewNews(trim($_POST['name_news']), $_POST['info'], $path, $_POST['date']);
                     $add->addToDb();
-                    echo $statusAdd;
+                    echo "<script>
+                    $(document).ready(function(){
+                    $('#hide').removeClass('d-none');
+                    $('#text_notification').text('Новость Добавлена');
+                    window.setTimeout(function(){   
+                    $('#hide').addClass('d-none');
+                    window.location=document.URL;
+                    },3000);});</script>";
                 } else {
                     echo "error";
                 }
             }
+
             //add the category
             if (isset($_POST['add_cat'])) {
-                try {
-                    $pdo = Tools::connect();
-                    $ps = $pdo->prepare("INSERT INTO `categories` (`category`) VALUES (:category)");
-                    $ps->bindParam(':category', $category);
-                    $category = $_POST['category'];
-                    $ps->execute();
-                } catch (PDOException $e) {
-                    echo $e->getMessage();
-                    return false;
-                }
+                $category = $_POST['category'];
+                Categories::addCategory($category);
+                echo "<script>
+                $(document).ready(function(){
+                $('#hide').removeClass('d-none');
+                $('#text_notification').text('Категория Добавлена');
+                window.setTimeout(function(){   
+                $('#hide').addClass('d-none');
+                window.location=document.URL;
+                },3000);});</script>";
             }
 
             if (isset($_POST['del_cat'])) {
+
                 Categories::deleteCat();
+                echo "<script>
+                $(document).ready(function(){
+                $('#hide').removeClass('d-none');
+                $('#text_notification').text('Категория Удалена');
+                window.setTimeout(function(){   
+                $('#hide').addClass('d-none');
+                window.location=document.URL;
+                },3000);});</script>";
             }
 
             if (isset($_POST['del_news_button'])) {
-                NewsUpdates::deleteNews();
+                DeletionEditingNews::deleteNews();
+                echo "<script>
+                $(document).ready(function(){
+                $('#hide').removeClass('d-none');
+                $('#text_notification').text('Новость Удалена');
+                window.setTimeout(function(){   
+                $('#hide').addClass('d-none');
+                window.location=document.URL;
+                },3000);});</script>";
             }
         }
         echo $echo;
